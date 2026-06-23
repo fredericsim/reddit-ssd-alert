@@ -1,0 +1,30 @@
+{
+	"$schema": "./node_modules/wrangler/config-schema.json",
+	"name": "reddit-ssd-alert",
+	"main": "src/index.ts",
+	"compatibility_date": "2026-06-22",
+	"workers_dev": true,
+	"observability": {
+		"enabled": true
+	},
+	"triggers": {
+		"crons": [
+			"* * * * *"
+		]
+	},
+	"vars": {
+		"REDDIT_FEED_URL": "https://old.reddit.com/r/buildapcsales/search.rss?q=flair%3A%22SSD%20-%20M.2%22%20OR%20flair%3A%22SSD%20-%20SATA%22%20OR%20flair%3ASSD&restrict_sr=1&sort=new",
+		"SEEN_POST_LIMIT": "100",
+		"MAX_ALERTS_PER_RUN": "5",
+		"SEND_INITIAL_ALERTS": "false",
+		"NTFY_TITLE": "Reddit SSD Alert",
+		"NTFY_TAGS": "computer,shopping",
+		"NTFY_PRIORITY": "default"
+	},
+	"kv_namespaces": [
+		{
+			"binding": "ALERT_STATE",
+			"id": "f5e033c04bbf4128b3cbfb764aace00a"
+		}
+	]
+}
