@@ -1,9 +1,9 @@
 # reddit-ssd-alert
 
-A small Cloudflare Worker that checks the `r/buildapcsales` SSD search feed on a cron schedule and sends new matches to ntfy.
+A small Cloudflare Worker that checks SSD deal feeds on a cron schedule and sends new matches to ntfy.
 
 ```text
-Reddit Atom feed -> Cloudflare Worker Cron -> Workers KV -> ntfy topic
+Deal Atom feeds -> Cloudflare Worker Cron -> Workers KV -> ntfy topic
 ```
 
 The project is safe to keep public as long as secrets stay out of git. The ntfy topic URL is stored as a Wrangler secret, and local secret files are ignored.
@@ -11,8 +11,8 @@ The project is safe to keep public as long as secrets stay out of git. The ntfy 
 ## What It Does
 
 - Runs every minute with a Cloudflare Workers Cron Trigger.
-- Fetches a flair-based `r/buildapcsales` SSD feed from `old.reddit.com`.
-- Stores recently seen Reddit post IDs in Workers KV.
+- Fetches SSD feeds for `r/buildapcsales`, `r/bapcsalescanada`, and RedFlagDeals Hot Deals.
+- Stores recently seen deal post IDs in Workers KV.
 - Sends an ntfy push notification for each new post.
 - Bootstraps silently on the first run by default so you do not get spammed with old posts.
 - Writes to KV only when state changes, which keeps the one-minute schedule inside the free KV write allowance for normal use.
@@ -59,7 +59,7 @@ In the ntfy app, subscribe to that topic on the `ntfy.sh` server. Then send your
 
 ```bash
 curl \
-  -H "Title: Reddit SSD Alert" \
+  -H "Title: SSD Deal Alert" \
   -d "ntfy is connected" \
   "https://ntfy.sh/$TOPIC"
 ```
@@ -115,7 +115,10 @@ curl "http://localhost:8787/health"
 
 Most settings live in `wrangler.jsonc`:
 
-- `REDDIT_FEED_URL`: Reddit Atom/RSS URL to monitor.
+- `REDDIT_FEED_URLS`: comma-separated or newline-separated Reddit Atom/RSS URLs to monitor.
+- `REDDIT_FEED_URL`: legacy single-feed override, used only when `REDDIT_FEED_URLS` is not set.
+- `REDFLAGDEALS_FEED_URLS`: comma-separated or newline-separated RedFlagDeals Atom/RSS URLs to monitor.
+- `REDFLAGDEALS_FEED_URL`: legacy single-feed RedFlagDeals override, used only when `REDFLAGDEALS_FEED_URLS` is not set.
 - `SEEN_POST_LIMIT`: number of post IDs retained in KV.
 - `MAX_ALERTS_PER_RUN`: maximum ntfy alerts sent during one cron run.
 - `SEND_INITIAL_ALERTS`: set to `"true"` only if you want alerts for existing feed posts on first run.
@@ -123,10 +126,17 @@ Most settings live in `wrangler.jsonc`:
 - `NTFY_TAGS`: comma-separated ntfy tags.
 - `NTFY_PRIORITY`: ntfy priority value.
 
-The default feed watches SSD-related flair in `r/buildapcsales`:
+The default Reddit feeds watch SSD-related flair in `r/buildapcsales` and storage-tagged posts in `r/bapcsalescanada`, such as `[SSD]`, `[SSD Enclosure]`, `[CPU+SSD]`, or `[GPU + SSD]`:
 
 ```text
 https://old.reddit.com/r/buildapcsales/search.rss?q=flair%3A%22SSD%20-%20M.2%22%20OR%20flair%3A%22SSD%20-%20SATA%22%20OR%20flair%3ASSD&restrict_sr=1&sort=new
+https://old.reddit.com/r/bapcsalescanada/search.rss?q=title%3ASSD%20OR%20title%3ANVMe%20OR%20title%3A%22M.2%22&restrict_sr=1&sort=new
+```
+
+The default RedFlagDeals feed watches Hot Deals and filters to storage-related deals while excluding likely whole-system posts such as laptops, desktops, and prebuilts:
+
+```text
+https://forums.redflagdeals.com/feed/forum/9
 ```
 
 ## Public Repo Safety
