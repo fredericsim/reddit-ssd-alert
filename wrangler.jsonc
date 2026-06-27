@@ -13,11 +13,12 @@
 		]
 	},
 	"vars": {
-		"REDDIT_FEED_URL": "https://old.reddit.com/r/buildapcsales/search.rss?q=flair%3A%22SSD%20-%20M.2%22%20OR%20flair%3A%22SSD%20-%20SATA%22%20OR%20flair%3ASSD&restrict_sr=1&sort=new",
+		"REDDIT_FEED_URLS": "https://old.reddit.com/r/buildapcsales/search.rss?q=flair%3A%22SSD%20-%20M.2%22%20OR%20flair%3A%22SSD%20-%20SATA%22%20OR%20flair%3ASSD&restrict_sr=1&sort=new,https://old.reddit.com/r/bapcsalescanada/search.rss?q=title%3ASSD%20OR%20title%3ANVMe%20OR%20title%3A%22M.2%22&restrict_sr=1&sort=new",
+		"REDFLAGDEALS_FEED_URLS": "https://forums.redflagdeals.com/feed/forum/9",
 		"SEEN_POST_LIMIT": "100",
 		"MAX_ALERTS_PER_RUN": "5",
 		"SEND_INITIAL_ALERTS": "false",
-		"NTFY_TITLE": "Reddit SSD Alert",
+		"NTFY_TITLE": "SSD Deal Alert",
 		"NTFY_TAGS": "computer,shopping",
 		"NTFY_PRIORITY": "default"
 	},

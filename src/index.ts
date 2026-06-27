@@ -1,4 +1,4 @@
-import { DEFAULT_FEED_URL, Env, runRedditAlert } from "./alert";
+import { Env, getConfiguredFeedSources, runRedditAlert } from "./alert";
 
 export default {
   async scheduled(
@@ -17,7 +17,7 @@ export default {
       return json({
         ok: true,
         service: "reddit-ssd-alert",
-        feedUrl: env.REDDIT_FEED_URL ?? DEFAULT_FEED_URL,
+        feedSources: getConfiguredFeedSources(env),
         hasNtfyTopic: Boolean(env.NTFY_TOPIC_URL)
       });
     }

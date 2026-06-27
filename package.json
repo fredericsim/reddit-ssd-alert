@@ -2,7 +2,7 @@
   "name": "reddit-ssd-alert",
   "version": "0.1.0",
   "private": false,
-  "description": "A Cloudflare Worker that watches r/buildapcsales SSD posts and sends ntfy alerts.",
+  "description": "A Cloudflare Worker that watches SSD deal feeds and sends ntfy alerts.",
   "type": "module",
   "scripts": {
     "dev": "wrangler dev --test-scheduled",
